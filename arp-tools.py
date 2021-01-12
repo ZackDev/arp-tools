@@ -1,14 +1,14 @@
 import socket as socket
 
 class ARP:
-    def __init__(self):
-        pass
+    def __init__(self, interface):
+        self.interface = interface
 
     def send(self, packet):
         for p in packet:
             try:
                 s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0, None)
-                s.bind(('wlan0', 0))
+                s.bind((self.interface, 0))
                 s.send(p.to_bytes())
                 s.close()
             except Exception as e:
@@ -55,10 +55,11 @@ class ARPPacket():
         return ip
 
 
-
 class Client:
     def __init__(self):
-        arp = ARP()
+        iface = 'wlan0'
+        arp = ARP(iface)
+
         destination_address = '1a:1a:1a:1a:1a:1a'
         source_address = '1b:1b:1b:1b:1b:1b'
         operation = 2
@@ -70,7 +71,6 @@ class Client:
 
         target_protocol_address = '192.168.178.3'
         pck_2 = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
-
 
         arp.send([pck_1, pck_2])
 
