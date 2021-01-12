@@ -16,6 +16,14 @@ class ARP:
 
 class ARPPacket():
     def __init__(self, destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address):
+        destination_address = destination_address.replace(':', '')
+        source_address = source_address.replace(':', '')
+        operation = format(operation, '04x')
+        sender_hardware_address = sender_hardware_address.replace(':', '')
+        sender_protocol_address = self.ip_str_to_hex(sender_protocol_address)
+        target_hardware_address = target_hardware_address.replace(':', '')
+        target_protocol_address = self.ip_str_to_hex(target_protocol_address)
+
         ''' Ethernet Frame '''
         ''' user defined '''
         self.destination_address = destination_address
@@ -39,18 +47,24 @@ class ARPPacket():
     def to_bytes(self):
         return bytes.fromhex(self.destination_address + self.source_address + self.type + self.hardware_type + self.protocol_type + self.hardware_address_length + self.protocol_address_length + self.operation + self.sender_hardware_address + self.sender_protocol_address + self.target_hardware_address + self.target_protocol_address)
 
+    def ip_str_to_hex(self, ip_address):
+        ip = ''
+        for chunk in ip_address.split('.'):
+            ip += str(format(int(chunk), '02x'))
+        return ip
+
 
 
 class Client:
     def __init__(self):
         arp = ARP()
-        destination_address = '1a1a1a1a1a1a'
-        source_address = '1b1b1b1b1b1b'
-        operation = format(2, '04x')
-        sender_hardware_address = 'ffffffffffff'
-        sender_protocol_address = format(192, '02x') + format(168, '02x') + format(178, '02x') + format(1, '02x')
-        target_hardware_address = 'ffffffffffff'
-        target_protocol_address = format(192, '02x') + format(168, '02x') + format(178, '02x') + format(2, '02x')
+        destination_address = '1a:1a:1a:1a:1a:1a'
+        source_address = '1b:1b:1b:1b:1b:1b'
+        operation = 2
+        sender_hardware_address = 'ff:ff:ff:ff:ff:ff'
+        sender_protocol_address = '192.168.178.1'
+        target_hardware_address = 'ff:ff:ff:ff:ff:ff'
+        target_protocol_address = '192.168.178.2'
         pck = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
 
         arp.send(pck)
