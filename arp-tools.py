@@ -66,9 +66,13 @@ class Client:
         sender_protocol_address = '192.168.178.1'
         target_hardware_address = 'ff:ff:ff:ff:ff:ff'
         target_protocol_address = '192.168.178.2'
-        pck = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
+        pck_1 = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
 
-        arp.send([pck])
+        target_protocol_address = '192.168.178.3'
+        pck_2 = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
+
+
+        arp.send([pck_1, pck_2])
 
 
 if __name__ == '__main__':
