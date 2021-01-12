@@ -21,9 +21,9 @@ class ARPPacket():
         source_address = source_address.replace(':', '')
         operation = format(operation, '04x')
         sender_hardware_address = sender_hardware_address.replace(':', '')
-        sender_protocol_address = self.ip_str_to_hex(sender_protocol_address)
+        sender_protocol_address = self._ip_str_to_hex(sender_protocol_address)
         target_hardware_address = target_hardware_address.replace(':', '')
-        target_protocol_address = self.ip_str_to_hex(target_protocol_address)
+        target_protocol_address = self._ip_str_to_hex(target_protocol_address)
 
         ''' Ethernet Frame '''
         ''' user defined '''
@@ -48,7 +48,7 @@ class ARPPacket():
     def to_bytes(self):
         return bytes.fromhex(self.destination_address + self.source_address + self.type + self.hardware_type + self.protocol_type + self.hardware_address_length + self.protocol_address_length + self.operation + self.sender_hardware_address + self.sender_protocol_address + self.target_hardware_address + self.target_protocol_address)
 
-    def ip_str_to_hex(self, ip_address):
+    def _ip_str_to_hex(self, ip_address):
         ip = ''
         for chunk in ip_address.split('.'):
             ip += str(format(int(chunk), '02x'))
