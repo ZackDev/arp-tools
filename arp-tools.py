@@ -16,28 +16,20 @@ class ARP:
 
 class ARPPacket():
     def __init__(self, destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address):
-        destination_address = destination_address.replace(':', '')
-        source_address = source_address.replace(':', '')
-        operation = format(operation, '04x')
-        sender_hardware_address = sender_hardware_address.replace(':', '')
-        sender_protocol_address = self._ip_str_to_hex(sender_protocol_address)
-        target_hardware_address = target_hardware_address.replace(':', '')
-        target_protocol_address = self._ip_str_to_hex(target_protocol_address)
-
         ''' Ethernet Frame '''
         ''' user defined '''
-        self.destination_address = destination_address
-        self.source_address = source_address
+        self.destination_address = destination_address.replace(':', '')
+        self.source_address = source_address.replace(':', '')
         ''' static '''
         self.type = format(2054, '04x')
 
         ''' ARP Protocol '''
         ''' user defined '''
-        self.operation = operation
-        self.sender_hardware_address = sender_hardware_address
-        self.sender_protocol_address = sender_protocol_address
-        self.target_hardware_address = target_hardware_address
-        self.target_protocol_address = target_protocol_address
+        self.operation = format(operation, '04x')
+        self.sender_hardware_address = sender_hardware_address.replace(':', '')
+        self.sender_protocol_address = self._ip_str_to_hex(sender_protocol_address)
+        self.target_hardware_address = target_hardware_address.replace(':', '')
+        self.target_protocol_address = self._ip_str_to_hex(target_protocol_address)
         ''' static '''
         self.hardware_type = format(1, '04x')
         self.protocol_type = format(2048, '04x')
