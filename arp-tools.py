@@ -5,13 +5,14 @@ class ARP:
         pass
 
     def send(self, packet):
-        try:
-            s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0, None)
-            s.bind(('wlan0', 0))
-            s.send(packet.to_bytes())
-            s.close()
-        except Exception as e:
-            print(f'{e}')
+        for p in packet:
+            try:
+                s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0, None)
+                s.bind(('wlan0', 0))
+                s.send(p.to_bytes())
+                s.close()
+            except Exception as e:
+                print(f'{e}')
 
 
 class ARPPacket():
@@ -67,7 +68,7 @@ class Client:
         target_protocol_address = '192.168.178.2'
         pck = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
 
-        arp.send(pck)
+        arp.send([pck])
 
 
 if __name__ == '__main__':
