@@ -4,15 +4,14 @@ class ARP:
     def __init__(self, interface):
         self.interface = interface
 
-    def send(self, packet):
-        for p in packet:
-            try:
-                s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0, None)
-                s.bind((self.interface, 0))
-                s.send(p.to_bytes())
-                s.close()
-            except Exception as e:
-                print(f'{e}')
+    def send(self, packets):
+        try:
+            with socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0, None) as sock:
+                for p in packets:
+                    sock.bind((self.interface, 0))
+                    sock.send(p.to_bytes())
+        except Exception as e:
+            print(f'{e}')
 
 
 class ARPPacket():
@@ -64,12 +63,12 @@ class Client:
         source_address = '1b:1b:1b:1b:1b:1b'
         operation = 2
         sender_hardware_address = 'ff:ff:ff:ff:ff:ff'
-        sender_protocol_address = '192.168.178.1'
+        sender_protocol_address = '192.168.178.111'
         target_hardware_address = 'ff:ff:ff:ff:ff:ff'
-        target_protocol_address = '192.168.178.2'
+        target_protocol_address = '192.168.178.112'
         pck_1 = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
 
-        target_protocol_address = '192.168.178.3'
+        target_protocol_address = '192.168.178.113'
         pck_2 = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
 
         arp.send([pck_1, pck_2])
