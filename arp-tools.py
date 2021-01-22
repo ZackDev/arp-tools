@@ -7,8 +7,8 @@ class ARP:
     def send(self, packets):
         try:
             with socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0, None) as sock:
+                sock.bind((self.interface, 0))
                 for p in packets:
-                    sock.bind((self.interface, 0))
                     sock.send(p.to_bytes())
         except Exception as e:
             print(f'{e}')
