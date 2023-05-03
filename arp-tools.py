@@ -6,13 +6,19 @@ class ARP:
         self.interface = interface
 
     def send(self, packets):
+        sock = None
         try:
             with socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0, None) as sock:
-                sock.bind((self.interface, 0))
-                for p in packets:
-                    sock.send(p.to_bytes())
+                try:
+                    sock.bind((self.interface, 0))
+                    for p in packets:
+                        sock.send(p.to_bytes())
+                except Exception as e:
+                    print(f'Error using socket: {e}')
+                finally:
+                    sock.close()
         except Exception as e:
-            print(f'{e}')
+            print(f'Error creating socket: {e}')
 
 
 class ARPPacket():
@@ -49,7 +55,7 @@ class ARPPacket():
 
 class Client:
     def __init__(self):
-        iface = 'wlan0'
+        iface = 'wlx246511c68c84'
         arp = ARP(iface)
 
         destination_address = '1a:1a:1a:1a:1a:1a'
