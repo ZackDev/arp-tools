@@ -1,24 +1,4 @@
-import socket as socket
-
-
-class ARP:
-    def __init__(self, interface):
-        self.interface = interface
-
-    def send(self, packets):
-        sock = None
-        try:
-            with socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0, None) as sock:
-                try:
-                    sock.bind((self.interface, 0))
-                    for p in packets:
-                        sock.send(p.to_bytes())
-                except Exception as e:
-                    print(f'Error using socket: {e}')
-                finally:
-                    sock.close()
-        except Exception as e:
-            print(f'Error creating socket: {e}')
+from base import RAW
 
 
 class ARPPacket():
@@ -56,7 +36,7 @@ class ARPPacket():
 class Client:
     def __init__(self):
         iface = 'wlx246511c68c84'
-        arp = ARP(iface)
+        arp = RAW(iface)
 
         destination_address = '1a:1a:1a:1a:1a:1a'
         source_address = '1b:1b:1b:1b:1b:1b'
@@ -70,7 +50,7 @@ class Client:
         target_protocol_address = '192.168.178.113'
         pck_2 = ARPPacket(destination_address, source_address, operation, sender_hardware_address, sender_protocol_address, target_hardware_address, target_protocol_address)
 
-        arp.send([pck_1, pck_2])
+        arp.send([pck_1.to_bytes(), pck_2.to_bytes()])
 
 
 if __name__ == '__main__':
