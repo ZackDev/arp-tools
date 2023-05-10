@@ -8,8 +8,16 @@ if __name__ == '__main__':
     args = ap.parse_args()
 
     if args.i and args.d:
-        s = RAW(args.i)
         p = bytes.fromhex('ff' * 6 + args.d * 16)
-        s.send([p])
+        try:
+            s = RAW(args.i)
+        except Exception as e:
+            print('error creating socket for interface: {i}')
+            print(e)
+        try:
+            s.send([p])
+        except Exception as e:
+            print('error sending packet')
+            print(e)
     else:
         ap.print_help()
